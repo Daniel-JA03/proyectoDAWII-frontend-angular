@@ -1,1 +1,25 @@
-<router-outlet></router-outlet>
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" routerLink="#">VetMarket</a>
+    
+    <div class="navbar-nav-visible">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/ordenCompra" routerLinkActive="active">Mis Compras</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-danger ms-lg-3" routerLink="/login">Salir</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<main class="mt-5 pt-4 container">
+  <router-outlet />
+</main>
+
+<footer class="fixed-bottom py-2 bg-white text-center shadow-sm">
+  &copy;  Desarrollo de Apliaciones Web II
+</footer>

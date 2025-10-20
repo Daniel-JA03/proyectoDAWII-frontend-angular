@@ -8,9 +8,9 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   // TODO: URL temporal para entorno local (se cambiará al integrar Eureka y Gateway)
-  // * private apiUrl = 'http://localhost:8080/Autenticacion/auth';
+  private apiUrl = 'http://localhost:8080/Autenticacion/auth';
   
-  private apiUrl = 'http://localhost:59082/auth'
+  //private apiUrl = 'http://localhost:59082/auth'
   constructor(private http: HttpClient) { }
 
   login(credentials: LoginRequest): Observable<any> {

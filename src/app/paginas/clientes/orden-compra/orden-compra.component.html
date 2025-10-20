@@ -22,7 +22,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let ord of ordenes" class="align-middle">
-                        <td class="ps-4 fw-bold text-primary">{{ (ord.numeroOrden + '')?.padStart(5,'0') }}</td>
+                        <td class="ps-4 fw-bold text-primary">{{ (ord.numeroOrden + '').padStart(5,'0') }}</td>
                         <td>{{ ord.fecha | date:'dd/MM/yyyy' }}</td>
                         <td class="fw-semibold">S/ {{ ord.total | number:'1.2-2' }}</td>
                         <td class="text-center pe-4">
@@ -42,7 +42,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalDetalleLabel">
-                        Detalle Orden #{{ (ordenSeleccionada?.numeroOrden + '')?.padStart(5,'0') }}
+                        Detalle Orden #{{ (ordenSeleccionada?.numeroOrden + '').padStart(5,'0') }}
                     </h5>
                     <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarModalDetalle()"></button>
                 </div>
@@ -53,7 +53,7 @@
                     </div>
 
                     <!-- TABLA PARA DETALLE DE PRODUCTO (PRODUCT Detail Table) -->
-                    <div *ngIf="!esServicio && detalleProducto.length > 0">
+                    <div *ngIf="detalleProducto.length > 0">
                         <h6 class="mb-3 text-primary">Artículos Comprados</h6>
                         <table class="table table-sm table-bordered">
                             <thead class="table-light">
@@ -77,13 +77,12 @@
                     </div>
 
                     <!-- TABLA PARA DETALLE DE SERVICIO (SERVICE Detail Table) -->
-                    <div *ngIf="esServicio && detalleServicio.length > 0">
+                    <div *ngIf="detalleServicio.length > 0">
                         <h6 class="mb-3 text-success">Citas/Servicios Agendados</h6>
                         <table class="table table-sm table-bordered">
                             <thead class="table-light">
                                 <tr>
                                     <th>Servicio</th>
-                                    <th>Mascota ID</th>
                                     <th>Fecha Cita</th>
                                     <th>Total (S/.)</th>
                                 </tr>
@@ -92,7 +91,6 @@
                                 <tr *ngFor="let det of detalleServicio">
                                     <!-- Propiedades específicas de DetalleServicio -->
                                     <td>{{ det.nombre }}</td>
-                                    <td>{{ det.idMascota }}</td>
                                     <td>{{ det.fechaCita | date:'dd/MM/yyyy' }}</td>
                                     <td class="fw-semibold">{{ det.total | number:'1.2-2' }}</td>
                                 </tr>
