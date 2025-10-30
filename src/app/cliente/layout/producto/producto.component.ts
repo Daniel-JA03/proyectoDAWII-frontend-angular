@@ -42,14 +42,10 @@ export class ProductoComponent implements OnInit {
 
   constructor(
     public sanitizer: DomSanitizer,
-    //Add al carrito
-    private carrito:CarritoService,
-    private auth:AuthService
   ) {
   }
 
   ngOnInit(): void {
-    this.auth.rol$.subscribe((r) => this.rol = r);
     this.obtenerProductos();
   }
 
@@ -103,22 +99,6 @@ export class ProductoComponent implements OnInit {
     this.lowIndex = event.pageIndex * this.pageSize;
     this.highIndex = this.lowIndex + event.pageSize;
     return event;
-  }
-
-  //metodo para agregar al carrito
-  agregarAlCarrito(producto: Producto, cantidad:number) {
-    const token = this.auth.getToken();
-    const idUsuario = Number(this.auth.getUserId());
-
-    if (!token || !idUsuario) {
-      alert('Por favor inicia sesión para agregar productos al carrito.');
-      return;
-    }
-
-    this.carrito.agregarProducto(token, idUsuario, producto.idProducto, cantidad).subscribe({
-      next: () => alert(`"${producto.nombre}" fue añadido al carrito 🛒`),
-      error: (err) => console.error('Error al agregar al carrito:', err)
-    });
   }
 
   reload() {

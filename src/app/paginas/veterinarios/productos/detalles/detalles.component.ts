@@ -9,6 +9,7 @@ import {Location} from '@angular/common';
 import {AuthService} from '../../../../services/auth.service';
 import {MatButton} from '@angular/material/button';
 import { CarritoService } from '../../../../services/carrito.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detalles',
@@ -80,20 +81,37 @@ export class DetallesComponent implements OnInit {
   }
 
 
+  //metodo para agregar al carrito
   agregarAlCarrito(cantidad: number) {
     const token = this.auth.getToken();
     const idUsuario = Number(this.auth.getUserId());
 
     if (!token || !idUsuario) {
-      alert('Por favor inicia sesión para agregar productos al carrito.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Debes iniciar sesión',
+        text: 'Por favor inicia sesión para agregar productos al carrito.',
+        confirmButtonText: 'Aceptar'
+      });
       return;
     }
 
     this.carrito.agregarProducto(token, idUsuario, this.producto().idProducto, cantidad)
       .subscribe({
-        next: () => alert(`"${this.producto().nombre}" fue añadido al carrito 🛒`),
-        error: (err) => console.error('Error al agregar al carrito:', err)
+        next: () => Swal.fire({
+          icon: 'success',
+          title: '¡Producto agregado!',
+          text: `"${this.producto().nombre}" fue añadido al carrito 🛒`,
+          timer: 2000,
+          showConfirmButton: false
+        }),
+        error: (err) => Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo agregar el producto al carrito.',
+        })
       });
   }
+
 
 }
