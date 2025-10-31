@@ -17,6 +17,8 @@ export interface ServicioResponseDTO {
   nombreUsuario: string;
   apellido: string;
   telefono: string;
+
+  imgBase64?:String;
 }
 
 //Entidad del servicio

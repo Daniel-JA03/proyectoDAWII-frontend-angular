@@ -26,28 +26,39 @@ servicios: (ServicioResponseDTO & { imagenUrl?: string })[] = [];
     this.cargarServicios()
   }
 
-  cargarServicios() {
-    const usuarioId = this.authService.getUserId()
-    if(!usuarioId) {
-      Swal.fire('Error', 'Debes iniciar sesión como veterinario', 'error')
-      return
-    }
-
-    this.serviciosService.obtenerListaServiciosPorVeterinario(+usuarioId).subscribe({
-      next: (servicios) => {
-        this.servicios = servicios.map(servicio => ({
-          ...servicio,
-          imagenUrl: servicio.idServicio
-            ? `http://localhost:8080/servicio/servicios/imagen/${servicio.idServicio}`
-            : 'images/default.jpg'
-        }));
-      },
-      error: (err) => {
-        console.error('Error al cargar servicios:', err);
-        Swal.fire('Error', 'No se pudieron cargar tus servicios.', 'error');
-      }
-    });
+cargarServicios() {
+  const usuarioId = this.authService.getUserId();
+  if (!usuarioId) {
+    Swal.fire('Error', 'Debes iniciar sesión como veterinario', 'error');
+    return;
   }
+
+  this.serviciosService.obtenerListaServiciosPorVeterinario(+usuarioId).subscribe({
+    next: (servicios) => {
+      this.servicios = servicios;
+
+      this.servicios.forEach(servicio => {
+        this.serviciosService.obtenerImagen(servicio.idServicio).subscribe({
+          next: (imgBlob) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              servicio.imgBase64 = reader.result as string; // se guarda el Base64
+            };
+            reader.readAsDataURL(imgBlob);
+          },
+          error: () => {
+            servicio.imgBase64 = 'assets/images/default.jpg';
+          }
+        });
+      });
+    },
+    error: (err) => {
+      console.error('Error al cargar servicios:', err);
+      Swal.fire('Error', 'No se pudieron cargar tus servicios.', 'error');
+    }
+  });
+}
+
 
   abrirModal() {
     this.servicioSeleccionado = null;
