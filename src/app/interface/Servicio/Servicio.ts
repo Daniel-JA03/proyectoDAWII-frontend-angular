@@ -18,7 +18,7 @@ export interface ServicioResponseDTO {
   apellido: string;
   telefono: string;
 
-  imgBase64?:String;
+  imgBase64?:string;
 }
 
 //Entidad del servicio
@@ -32,8 +32,4 @@ export interface Servicio{
   usuario?: Usuario
 
   detServicio?: DetalleServicio
-}
-//Agregar Url Imagen
-export interface ServicioResponseDTOWithImage extends ServicioResponseDTO {
-  imagenUrl?: string
 }

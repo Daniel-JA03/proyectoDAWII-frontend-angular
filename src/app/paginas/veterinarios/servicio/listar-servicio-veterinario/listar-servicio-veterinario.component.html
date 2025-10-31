@@ -29,11 +29,11 @@
           <td>{{ servicio.descripcion || "—" }}</td>
           <td>{{ servicio.precio | number : "1.2-2" }}</td>
           <td>
-            <div *ngIf="servicio.imagenUrl; else noImage" class="img-preview">
+            <div *ngIf="servicio.imgBase64; else noImage" class="img-preview">
               <img
-                [src]="servicio.imagenUrl"
+                [src]="servicio.imgBase64"
                 alt="{{ servicio.nombre }}"
-                (error)="servicio.imagenUrl = 'images/default.jpg'"
+                (error)="servicio.imgBase64 = 'assets/images/default.jpg'"
                 class="img-fluid"
               />
             </div>

@@ -14,7 +14,7 @@ import { CrearServicioComponent } from '../../../administrador/servicio/crear-se
   styleUrl: './listar-servicio-veterinario.component.scss'
 })
 export class ListarServicioVeterinarioComponent {
-servicios: (ServicioResponseDTO & { imagenUrl?: string })[] = [];
+servicios: ServicioResponseDTO[] = [];
   servicioSeleccionado: ServicioResponseDTO | null = null;
 
   constructor(

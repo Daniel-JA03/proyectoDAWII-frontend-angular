@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ServicioResponseDTOWithImage } from '../../../../interface/Servicio/Servicio';
+import { ServicioResponseDTO } from '../../../../interface/Servicio/Servicio';
 
 @Component({
   selector: 'app-listar-servicio-cliente',
@@ -16,7 +16,7 @@ import { ServicioResponseDTOWithImage } from '../../../../interface/Servicio/Ser
   styleUrl: './listar-servicio-cliente.component.scss'
 })
 export class ListarServicioClienteComponent implements OnInit {
-serviciosSignal = signal<ServicioResponseDTOWithImage[]>([]);
+serviciosSignal = signal<ServicioResponseDTO[]>([]);
   servicios = computed(() => this.serviciosSignal());
 
   // Pagination
@@ -33,21 +33,33 @@ serviciosSignal = signal<ServicioResponseDTOWithImage[]>([]);
 
   cargarServicios(): void {
     this.serviciosService.obtenerListaServicios().subscribe({
-  next: (data) => {
-    this.serviciosSignal.set(
-      data.map(servicio => ({
-        ...servicio,
-        imagenUrl: servicio.idServicio
-          ? `http://localhost:8080/servicio/servicios/imagen/${servicio.idServicio}`
-          : 'images/default.jpg'
-      }))
-    );
-  },
-  error: (err) => {
-    console.error('Error al cargar servicios:', err);
-    this.serviciosSignal.set([]);
-  }
-});
+    next: (servicios) => {
+        this.serviciosSignal.set(servicios);
+
+        servicios.forEach(servicio => {
+          this.serviciosService.obtenerImagen(servicio.idServicio).subscribe({
+            next: (imgBlob) => {
+              const reader = new FileReader();
+              reader.onload = () => {
+                servicio.imgBase64 = reader.result as string;
+                // Actualiza el estado reactivo con la nueva imagen
+                this.serviciosSignal.update(prev =>
+                  prev.map(s => s.idServicio === servicio.idServicio ? { ...s, imgBase64: servicio.imgBase64 } : s)
+                );
+              };
+              reader.readAsDataURL(imgBlob);
+            },
+            error: () => {
+              servicio.imgBase64 = 'assets/images/default.jpg';
+            }
+          });
+        });
+      },
+    error: (err) => {
+      console.error('Error al cargar servicios:', err);
+      this.serviciosSignal.set([]);
+    }
+  });
   }
 
   onImageError(event: Event): void {

@@ -19,7 +19,7 @@
             <div class="servicio-imagen-container">
               <img
                 mat-card-image
-                [src]="servicio.imagenUrl || './assets/images/default.jpg'"
+                [src]="servicio.imgBase64 || 'assets/images/default.jpg'"
                 alt="{{ servicio.nombre }}"
                 (error)="onImageError($event)"
               />
