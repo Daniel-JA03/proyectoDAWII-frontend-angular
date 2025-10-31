@@ -16,7 +16,7 @@ import { AuthService } from '../../../../services/auth.service';
   styleUrl: './detalle-servicio.component.scss'
 })
 export class DetalleServicioComponent implements OnInit {
-servicio = signal<ServicioResponseDTO & { imagenUrl?: string } | null>(null);
+servicio = signal<ServicioResponseDTO | null>(null);
 
   rol:string | null=null
   constructor(
@@ -30,20 +30,35 @@ servicio = signal<ServicioResponseDTO & { imagenUrl?: string } | null>(null);
     this.authService.rol$.subscribe((rol) => {
       this.rol = rol;
     });
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.serviciosService.obtenerServicioPorId(+id).subscribe({
-        next: (data) => {
-          this.servicio.set({
-            ...data,
-            imagenUrl: `http://localhost:8080/servicio/servicios/imagen/${data.idServicio}`
-          });
-        },
-        error: () => {
-          this.servicio.set(null);
-        }
-      });
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!isNaN(id)) {
+      this.cargarServicio(id);
     }
+  }
+
+  cargarServicio(id: number): void {
+    this.serviciosService.obtenerServicioPorId(id).subscribe({
+      next: (data) => {
+        const servicioConImagen: ServicioResponseDTO & { imgBase64?: string } = { ...data };
+
+        // Obtener imagen como blob
+        this.serviciosService.obtenerImagen(data.idServicio).subscribe({
+          next: (imgBlob) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              servicioConImagen.imgBase64 = reader.result as string;
+              this.servicio.set(servicioConImagen);
+            };
+            reader.readAsDataURL(imgBlob);
+          },
+          error: () => {
+            servicioConImagen.imgBase64 = 'assets/images/default.jpg';
+            this.servicio.set(servicioConImagen);
+          },
+        });
+      },
+      error: () => this.servicio.set(null),
+    });
   }
 
   agendarCita(): void {

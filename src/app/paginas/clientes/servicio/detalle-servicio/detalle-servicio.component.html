@@ -18,7 +18,7 @@
         <div class="imagen-contenedor">
           <img
             mat-card-image
-            [src]="s.imagenUrl || './assets/images/default.jpg'"
+            [src]="s.imgBase64 || 'assets/images/default.jpg'"
             alt="{{ s.nombre }}"
             (error)="onImageError($event)"
           />
@@ -30,7 +30,8 @@
             <span class="text-muted">{{ s.descripcion || 'No disponible' }}</span>
           </p>
         </mat-card-content>
-        @if (rol === 'CLIENTE'){
+
+        @if (rol === 'CLIENTE') {
           <mat-card-actions class="d-flex justify-content-center pb-3">
             <button mat-raised-button color="primary" (click)="agendarCita()">
               Agendar Cita
